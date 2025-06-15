@@ -1,0 +1,28 @@
+# yaml 配置
+# Zeus C1 Web管理系统，可以便捷操作安卓，如创建，删除，开关机，切换镜像，备份等等，还集成了VPC网络管理，可以给每个安卓单独指定VPC网络，自带魔云趣连，可远程管理使用云机
+# 以及用户管理，可以创建新用户，并给用户分配安卓
+version: '3.9'
+services:
+  mytControl-link:
+    container_name: mytControl-link
+    image: registry.cn-hangzhou.aliyuncs.com/whsyf/dobox:alpine_mytlink_1.1.25
+    restart: always
+    privileged: true
+    ports:
+      - "8003:80"
+    volumes:
+      - /root/.ssh:/root/myt/.ssh
+      - mytLink1-data:/root/mytC1-data
+    sysctls:
+      - net.ipv4.conf.eth0.rp_filter=0
+      - net.ipv4.conf.all.rp_filter=0
+      - net.ipv4.conf.default.rp_filter=0
+      - net.ipv4.conf.lo.rp_filter=0
+    network_mode: bridge
+    command: sh -c "cd /root && ./myt-control-single"
+    labels:
+      - "myt_plugin_id=5"
+      - "myt_plugin_name=mytControl-link"
+      - "myt_plugin_ver=1.1.25"
+volumes:
+  mytLink1-data:
